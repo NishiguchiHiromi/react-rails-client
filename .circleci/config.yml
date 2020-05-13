@@ -1,21 +1,94 @@
 version: 2.1
-jobs:
-  build:
+
+orbs:
+  aws-cli: circleci/aws-cli@1.0.0
+
+executors:
+  default:
     docker:
-      - image: circleci/node:4.8.2
+      - image: circleci/node:10.11.0-browsers
+    working_directory: ~/client
+  deploy:
+    docker:
+      - image: circleci/python:3.6.5
+
+commands:
+  yarn_install:
+    steps:
+      - restore_cache:
+          name: Restore yarn cache
+          keys:
+            - v1-npm-deps-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - run:
+          name: yarn install
+          command: yarn install
+      - save_cache:
+          name: Save yarn cache
+          key: v1-npm-deps-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+  yarn_build:
+    steps:
+      - run: yarn build
+
+jobs:
+  build-master:
+    executor: default
     steps:
       - checkout
+      - yarn_install
+      - yarn_build
+      - persist_to_workspace:
+          root: ~/client
+          paths:
+            - build/*
+  deploy-master:
+    executor: deploy
+    steps:
+      - attach_workspace:
+          at: .
       - run:
-          name: The First Step
-          command: |
-            echo 'Hello World!'
-            echo 'This is the delivery pipeline'
-      - run:
-          name: Code Has Arrived
-          command: |
-            ls -al
-            echo '^^^That should look familiar^^^'
-      - run:
-          name: Running in a Unique Container
-          command: |
-            node -v
+          name: Deploy to S3
+          command: aws s3 sync ./build/ s3://react-rails-client-prod/ --delete --exact-timestamps
+
+workflows:
+  deploy:
+    jobs:
+      # masterブランチ
+      - build-master:
+          filters:
+            branches:
+              only:
+                - master
+      - deploy-master:
+          requires:
+            - build-master
+          filters:
+            branches:
+              only:
+                - master
+
+
+
+
+
+# jobs:
+#   build:
+#     docker:
+#       - image: circleci/node:4.8.2
+#     steps:
+#       - checkout
+#       - run:
+#           name: The First Step
+#           command: |
+#             echo 'Hello World!'
+#             echo 'This is the delivery pipeline'
+#       - run:
+#           name: Code Has Arrived
+#           command: |
+#             ls -al
+#             echo '^^^That should look familiar^^^'
+#       - run:
+#           name: Running in a Unique Container
+#           command: |
+#             node -v
