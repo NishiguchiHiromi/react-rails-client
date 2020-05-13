@@ -9,6 +9,8 @@ executors:
       - image: circleci/node:14.0.0-browsers
     working_directory: ~/client
   deploy:
+    environment:
+      AWS_PAGER: "" # これがないとCloudFrontキャッシュ削除時にlessがないと言われる
     docker:
       - image: circleci/python:3.6.5
 
