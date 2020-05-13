@@ -39,7 +39,9 @@ jobs:
       - yarn_install
       - yarn_build
       - persist_to_workspace:
-          <<: *default-persist
+          root: ~/client
+          paths:
+            - build/*
   deploy-master:
     executor: deploy
     steps:
@@ -54,14 +56,17 @@ workflows:
     jobs:
       # masterブランチ
       - build-master:
-          filters: &master-filters
+          filters:
             branches:
-              only: master
+              only:
+                - master
       - deploy-master:
           requires:
             - build-master
           filters:
-            <<: *master-filters
+            branches:
+              only:
+                - master
 
 
 
