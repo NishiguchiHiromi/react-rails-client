@@ -47,6 +47,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - aws-cli/setup
       - run:
           name: Deploy to S3
           command: aws s3 sync ./build/ s3://react-rails-client-prod/ --delete --exact-timestamps
