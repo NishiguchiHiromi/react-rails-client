@@ -55,7 +55,7 @@ jobs:
           command: aws s3 sync ./build/ s3://react-rails-client-prod/ --delete --exact-timestamps
       - run:
           name: Clear CloudFront cache
-          command: aws cloudfront create-invalidation --distribution-id E1EPGCNC8ISTSH --paths '/*'
+          command: aws cloudfront create-invalidation --distribution-id ENDF28FMG9J7T --paths '/*'
 
 workflows:
   deploy:
