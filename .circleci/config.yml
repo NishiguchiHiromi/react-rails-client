@@ -3,6 +3,13 @@ version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@1.0.0
 
+references:
+  master_branch_filter: &master_branch_filter
+    filters:
+      branches:
+        only:
+          - master
+
 executors:
   default:
     docker:
@@ -62,17 +69,11 @@ workflows:
     jobs:
       # masterブランチ
       - build-master:
-          filters:
-            branches:
-              only:
-                - master
+          <<: *master_branch_filter
       - deploy-master:
           requires:
             - build-master
-          filters:
-            branches:
-              only:
-                - master
+          <<: *master_branch_filter
 
 
 
