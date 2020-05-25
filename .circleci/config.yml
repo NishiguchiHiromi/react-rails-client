@@ -4,6 +4,17 @@ orbs:
   aws-cli: circleci/aws-cli@1.0.0
 
 references:
+  commands:
+    production_deploy: &production_deploy
+      run:
+        name: Deploy to S3 Production
+        command: aws s3 sync ./build/ s3://react-rails-client-prod/ --delete --exact-timestamps
+    production_clear_cache: &production_clear_cache
+      run:
+        name: Clear CloudFront cache Production
+        command: aws cloudfront create-invalidation --distribution-id E2LCPBNV924HQ3 --paths '/*'
+
+
   master_branch_filter: &master_branch_filter
     filters:
       branches:
@@ -57,12 +68,8 @@ jobs:
       - attach_workspace:
           at: .
       - aws-cli/setup
-      - run:
-          name: Deploy to S3
-          command: aws s3 sync ./build/ s3://react-rails-client-prod/ --delete --exact-timestamps
-      - run:
-          name: Clear CloudFront cache
-          command: aws cloudfront create-invalidation --distribution-id E3NQJ1LL61GEVW --paths '/*'
+      - *production_deploy
+      - *production_clear_cache
 
 workflows:
   deploy:
