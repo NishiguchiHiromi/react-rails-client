@@ -6,7 +6,7 @@ orbs:
 references:
   commands:
     deploy:
-      staging_s3_deploy: &staging_deploy
+      staging_s3_deploy: &staging_s3_deploy
         run:
           name: Deploy to S3 Staging
           command: aws s3 sync ./build/ s3://react-rails-client-staging/ --delete --exact-timestamps
