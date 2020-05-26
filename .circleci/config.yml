@@ -5,21 +5,47 @@ orbs:
 
 references:
   commands:
-    production_deploy: &production_deploy
-      run:
-        name: Deploy to S3 Production
-        command: aws s3 sync ./build/ s3://react-rails-client-prod/ --delete --exact-timestamps
-    production_clear_cache: &production_clear_cache
-      run:
-        name: Clear CloudFront cache Production
-        command: aws cloudfront create-invalidation --distribution-id E2LCPBNV924HQ3 --paths '/*'
+    deploy:
+      staging_s3_deploy: &staging_deploy
+        run:
+          name: Deploy to S3 Staging
+          command: aws s3 sync ./build/ s3://react-rails-client-staging/ --delete --exact-timestamps
+      production_s3_deploy: &production_s3_deploy
+        run:
+          name: Deploy to S3 Production
+          command: aws s3 sync ./build/ s3://react-rails-client-prod/ --delete --exact-timestamps
+
+    clear_cache:
+      staging_clear_cache: &staging_clear_cache
+        run:
+          name: Clear CloudFront cache Staging
+          command: aws cloudfront create-invalidation --distribution-id xxxxxxxx --paths '/*'
+      production_clear_cache: &production_clear_cache
+        run:
+          name: Clear CloudFront cache Production
+          command: aws cloudfront create-invalidation --distribution-id E2LCPBNV924HQ3 --paths '/*'
 
 
-  master_branch_filter: &master_branch_filter
-    filters:
-      branches:
-        only:
-          - master
+    persist_to_workspace: &persist_to_workspace
+      persist_to_workspace:
+        root: ~/client
+        paths:
+          - build/*
+    attach_workspace: &attach_workspace
+      attach_workspace:
+        at: .
+
+  filters:
+    staging_branch_filter: &staging_branch_filter
+      filters:
+        branches:
+          only:
+            - staging
+    master_branch_filter: &master_branch_filter
+      filters:
+        branches:
+          only:
+            - master
 
 executors:
   default:
@@ -47,62 +73,59 @@ commands:
           key: v1-npm-deps-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
-  yarn_build:
+  yarn_staging_build:
+    steps:
+      - run: yarn build:staging
+  yarn_production_build:
     steps:
       - run: yarn build:production
 
 jobs:
-  build-master:
+  staging_build:
     executor: default
     steps:
       - checkout
       - yarn_install
-      - yarn_build
-      - persist_to_workspace:
-          root: ~/client
-          paths:
-            - build/*
-  deploy-master:
+      - yarn_staging_build
+      - *persist_to_workspace
+  production_build:
+    executor: default
+    steps:
+      - checkout
+      - yarn_install
+      - yarn_production_build
+      - *persist_to_workspace
+
+  staging_deploy:
     executor: deploy
     steps:
-      - attach_workspace:
-          at: .
+      - *attach_workspace
       - aws-cli/setup
-      - *production_deploy
+      - *staging_s3_deploy
+      - *staging_clear_cache
+  production_deploy:
+    executor: deploy
+    steps:
+      - *attach_workspace
+      - aws-cli/setup
+      - *production_s3_deploy
       - *production_clear_cache
 
 workflows:
   deploy:
     jobs:
-      # masterブランチ
-      - build-master:
-          <<: *master_branch_filter
-      - deploy-master:
+      # stagingブランチ
+      - staging_build:
+          <<: *staging_branch_filter
+      - staging_deploy:
           requires:
-            - build-master
+            - staging_build
+          <<: *staging_branch_filter
+
+      # masterブランチ
+      - production_build:
           <<: *master_branch_filter
-
-
-
-
-
-# jobs:
-#   build:
-#     docker:
-#       - image: circleci/node:4.8.2
-#     steps:
-#       - checkout
-#       - run:
-#           name: The First Step
-#           command: |
-#             echo 'Hello World!'
-#             echo 'This is the delivery pipeline'
-#       - run:
-#           name: Code Has Arrived
-#           command: |
-#             ls -al
-#             echo '^^^That should look familiar^^^'
-#       - run:
-#           name: Running in a Unique Container
-#           command: |
-#             node -v
+      - production_deploy:
+          requires:
+            - production_build
+          <<: *master_branch_filter
