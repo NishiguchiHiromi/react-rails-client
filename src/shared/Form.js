@@ -116,12 +116,13 @@ export const MultiSelect = ({
         newFieldValues[index] = newValue;
         setFieldValue(field.name, newFieldValues);
       };
-
-      const values = fieldValues.length ? fieldValues : [undefined];
+      if (!fieldValues.length) {
+        setTimeout(() => setFieldValue(field.name, [undefined]), 0);
+      }
 
       return (
         <>
-          {values.map((v, index) => (
+          {fieldValues.map((v, index) => (
             renderSelectBoxLayout({
               index,
               deleteHandler: () => deleteHandler(index),

@@ -1,4 +1,4 @@
-import { Form, withFormik, Field } from 'formik';
+import { Form, withFormik } from 'formik';
 import React from 'react';
 import Yup from 'config/yup.custom';
 import {
@@ -43,7 +43,7 @@ const UserFormTemplate = ({
           renderSelectBoxLayout={({ index, SelectBox, deleteHandler }) => (
             <div key={index}>
               {SelectBox}
-              <button type="button" onClick={deleteHandler}>削除</button>
+              {!!index && <button type="button" onClick={deleteHandler}>削除</button>}
             </div>
           )}
         />
