@@ -54,7 +54,7 @@ class Api {
     });
   }
 
-  get(id) {
+  getUser(id) {
     return axios({
       method: 'get',
       url: `/api/v1/users/${id}`,
@@ -62,7 +62,7 @@ class Api {
     });
   }
 
-  post(user) {
+  createUser(user) {
     return axios({
       method: 'post',
       url: '/api/v1/users',
@@ -71,7 +71,7 @@ class Api {
     });
   }
 
-  update(user) {
+  updateUser(user) {
     return axios({
       method: 'put',
       url: `/api/v1/users/${user.id}`,
@@ -80,7 +80,7 @@ class Api {
     });
   }
 
-  delete(id) {
+  deleteUser(id) {
     return axios({
       method: 'delete',
       url: `/api/v1/users/${id}`,
@@ -93,6 +93,23 @@ class Api {
       method: 'get',
       url: '/api/v1/users/search_form',
       headers: this.headers,
+    });
+  }
+
+  getDepartments() {
+    return axios({
+      method: 'get',
+      url: '/api/v1/department',
+      headers: this.headers,
+    });
+  }
+
+  saveDepartments(departments) {
+    return axios({
+      method: 'post',
+      url: '/api/v1/department',
+      headers: this.headers,
+      data: { departments },
     });
   }
 }

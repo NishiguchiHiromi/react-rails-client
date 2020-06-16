@@ -1,8 +1,8 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import useUserFormItems from '../hooks/useUserFormItems';
-import useUsersFetch from '../hooks/useUsersFetch';
-import Paginator from '../shared/Paginator';
+import useUserFormItems from 'hooks/useUserFormItems';
+import useUsersFetch from 'hooks/useUsersFetch';
+import Paginator from 'shared/Paginator';
 import UserList from './UserList';
 import UserSearch from './UserSearch';
 

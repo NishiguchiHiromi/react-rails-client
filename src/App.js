@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import PublicRoute from 'components/routes/PublicRoute';
 import Auth from './components/Auth';
-import Public from './components/Public';
 
 export default function App() {
   return (
     <Router>
       <Switch>
         <Route path="/public">
-          <Public />
+          <PublicRoute />
         </Route>
         <Route path="/">
           <Auth />

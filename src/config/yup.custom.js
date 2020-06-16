@@ -1,5 +1,9 @@
 import * as Yup from 'yup';
 
+Yup.addMethod(Yup.array, 'unique', function (message = '重複しています', mapper = (a) => a) {
+  return this.test('unique', message, (list) => list.filter((v) => v).length === new Set(list.filter((v) => v).map(mapper)).size);
+});
+
 Yup.setLocale({
   mixed: {
     default: '入力エラーです',

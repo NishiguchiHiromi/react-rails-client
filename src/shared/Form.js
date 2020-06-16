@@ -101,6 +101,62 @@ export const Select = ({
   </Field>
 );
 
+export const MultiSelect = ({
+  name, data, blank, valueIsString, deleteHandler, renderSelectBoxLayout,
+} = { valueIsString: false }) => (
+  <Field name={name}>
+    {({ field, form: { setFieldValue }, meta }) => {
+      const {
+        value: fieldValues, onBlur,
+      } = field;
+      const error = meta.touched && meta.error;
+
+      const updateFieldValue = ({ index, newValue }) => {
+        const newFieldValues = [...fieldValues];
+        newFieldValues[index] = newValue;
+        setFieldValue(field.name, newFieldValues);
+      };
+
+      const values = fieldValues.length ? fieldValues : [undefined];
+
+      return (
+        <>
+          {values.map((v, index) => (
+            renderSelectBoxLayout({
+              index,
+              deleteHandler: () => deleteHandler(index),
+              SelectBox: (
+                <SelectStyled
+                  error={error}
+                  name={name}
+                  value={v}
+                  onChange={(e) => {
+                    const targetValue = e.currentTarget.value;
+                    let newValue;
+                    if (valueIsString || !targetValue) {
+                      newValue = targetValue;
+                    } else {
+                      newValue = Number(targetValue);
+                    }
+                    updateFieldValue({ index, newValue });
+                  }}
+                  onBlur={onBlur}
+                >
+                  {blank && <option>{}</option>}
+                  {(data || []).map(({ label, value }) => (
+                    <option value={value} key={value}>{label}</option>
+                  ))}
+                </SelectStyled>
+              ),
+            })
+          ))}
+          {error && <ErrorMsg>{meta.error}</ErrorMsg>}
+        </>
+      );
+    }}
+  </Field>
+);
+
 export const Radio = ({ name, data }) => (
   <Field name={name}>
     {({ field: { value: formValue, ...field }, form, meta }) => {

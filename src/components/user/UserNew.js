@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import useUserFormItems from '../hooks/useUserFormItems';
-import api from '../service/api';
+import useUserFormItems from 'hooks/useUserFormItems';
+import api from 'service/api';
 import UserForm from './UserForm';
 
 const UserNew = ({ history }) => {
@@ -9,14 +9,15 @@ const UserNew = ({ history }) => {
 
   const createUser = (user) => {
     console.log('create');
-    return api.post(user).then((res) => {
-      history.push(`/user/${res.data.user.id}`);
+    return api.createUser(user).then((res) => {
+      history.push(`/user/${res.data.id}`);
     });
   };
 
   return formItems && (
     <UserForm
       formItems={formItems}
+      isNewUser
       registerUser={(user) => createUser(user)}
     />
   );

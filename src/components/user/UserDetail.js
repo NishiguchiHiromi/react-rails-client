@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import useUserFetch from '../hooks/useUserFetch';
-import api from '../service/api';
+import useUserFetch from 'hooks/useUserFetch';
+import api from 'service/api';
 
 const UserDetail = ({ match, history }) => {
   const [user] = useUserFetch(match.params.id);
@@ -12,7 +12,7 @@ const UserDetail = ({ match, history }) => {
 
   const deleteUser = () => {
     api
-      .delete(match.params.id)
+      .deleteUser(match.params.id)
       .then(() => {
         history.push('/user');
       })
@@ -24,12 +24,7 @@ const UserDetail = ({ match, history }) => {
       User Detail Area
       {user && (
         <p>
-          id:
-          {' '}
-          {user.id}
-          , name:
-          {' '}
-          {user.name}
+          {JSON.stringify(user)}
           <button type="button" onClick={() => editUser()}>edit</button>
           <button type="button" onClick={() => deleteUser()}>delete</button>
         </p>

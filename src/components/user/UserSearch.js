@@ -2,9 +2,9 @@ import { Form, withFormik } from 'formik';
 import React from 'react';
 import {
   Check, Input, Radio, Select,
-} from '../shared/Form';
+} from 'shared/Form';
 
-const UserSearchTemplate = ({ formItems }) => console.log('formItems', formItems) || (
+const UserSearchTemplate = ({ formItems }) => (
   <Form>
     <div>
       <Input type="text" name="name_cont" placeholder="氏名" />

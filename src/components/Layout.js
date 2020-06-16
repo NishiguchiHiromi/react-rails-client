@@ -37,19 +37,21 @@ const Layout = ({ loginUser, logout, children }) => (
         <p>サイドメニュー</p>
         <ul>
           <li>
-            <Link to="/public">Public Page</Link>
+            <Link to="/mypage">マイページ</Link>
           </li>
           <li>
-            <Link to="/mypage">MyPage</Link>
+            <Link to="/user">ユーザー管理</Link>
           </li>
           <li>
-            <Link to="/user">User</Link>
+            <Link to="/department">組織管理</Link>
           </li>
         </ul>
       </SideMenu>
       <Contents>{children}</Contents>
     </Main>
-    <Footer>Footer</Footer>
+    <Footer>
+      <Link to="/public">Public Page</Link>
+    </Footer>
   </div>
 );
 export default Layout;

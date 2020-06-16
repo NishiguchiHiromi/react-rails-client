@@ -8,8 +8,8 @@ const useUserFetch = (id) => {
     const fetchUser = () => {
       console.log('fetchUser');
       api
-        .get(id)
-        .then((res) => setUser(res.data.user))
+        .getUser(id)
+        .then((res) => setUser(res.data))
         .catch((res) => console.log(res));
     };
 
