@@ -10,12 +10,20 @@ axios.defaults.withCredentials = true;
 
 class Api {
   constructor() {
-    this.headers = {
+    this.csrfToken = '';
+  }
+
+  setCsrfToken(token) {
+    this.csrfToken = token;
+  }
+
+  get headers() {
+    return {
       'Content-Type': 'application/json;charset=utf-8',
       // カスタムヘッダがなければサーバー側で不正なリクエストと判定
       // => CSRF時に、カスタムヘッダを付けられた場合CORSのOriginの判定で弾く
       'My-Header': 'My-Header-Content',
-      // "My-Header2": "My-Header-Content"
+      'X-CSRF-Token': this.csrfToken,
     };
   }
 

@@ -9,6 +9,7 @@ const useLogin = () => {
 
   const login = ({ mail, password }) => api.login({ mail, password }).then((res) => {
     setLoginUser(res.data.loginUser);
+    api.setCsrfToken(res.data.csrf_token);
     history.push('/mypage');
   });
 
@@ -24,7 +25,10 @@ const useLogin = () => {
       console.log('login');
       api
         .checkLoggedIn()
-        .then((res) => setLoginUser(res.data.loginUser))
+        .then((res) => {
+          setLoginUser(res.data.loginUser);
+          api.setCsrfToken(res.data.csrf_token);
+        })
         .catch((res) => console.warn(res))
         .then(() => setFinishCheckLoggedIn(true));
     };
