@@ -5,7 +5,8 @@ import {
 import Layout from 'components/Layout';
 import Mypage from 'components/Mypage';
 import User from 'components/user/User';
-import Department from 'components/department';
+// import Department from 'components/admin/department';
+import File from 'components/file';
 
 const PrivateRoute = ({ loginUser, logout }) => (
   <Layout loginUser={loginUser} logout={() => logout()}>
@@ -16,8 +17,11 @@ const PrivateRoute = ({ loginUser, logout }) => (
       <Route path="/user">
         <User />
       </Route>
-      <Route path="/department">
+      {/* <Route path="/department">
         <Department />
+      </Route> */}
+      <Route path="/file">
+        <File />
       </Route>
     </Switch>
   </Layout>

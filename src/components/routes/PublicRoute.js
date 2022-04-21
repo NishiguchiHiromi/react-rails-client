@@ -2,19 +2,18 @@ import React from 'react';
 import {
   Route, Switch, withRouter,
 } from 'react-router-dom';
-import Public from 'components/Public';
 
 const PublicRoute = ({ match }) => (
   <Switch>
     <Route exact path={`${match.url}`}>
-      <Public />
+      パブリックなページ
     </Route>
-    <Route path={`${match.url}/hoge`}>
+    {/* <Route path={`${match.url}/hoge`}>
       hoge
     </Route>
     <Route path={`${match.url}/fuga`}>
       fuga
-    </Route>
+    </Route> */}
   </Switch>
 );
 

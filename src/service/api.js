@@ -75,7 +75,7 @@ class Api {
       method: 'post',
       url: '/api/v1/users',
       headers: this.headers,
-      data: { user },
+      data: { users: user },
     });
   }
 
@@ -84,7 +84,7 @@ class Api {
       method: 'put',
       url: `/api/v1/users/${user.id}`,
       headers: this.headers,
-      data: { user },
+      data: { users: user },
     });
   }
 
@@ -101,23 +101,6 @@ class Api {
       method: 'get',
       url: '/api/v1/users/search_form',
       headers: this.headers,
-    });
-  }
-
-  getDepartments() {
-    return axios({
-      method: 'get',
-      url: '/api/v1/department',
-      headers: this.headers,
-    });
-  }
-
-  saveDepartments(departments) {
-    return axios({
-      method: 'post',
-      url: '/api/v1/department',
-      headers: this.headers,
-      data: { departments },
     });
   }
 }

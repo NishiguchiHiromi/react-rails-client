@@ -45,6 +45,9 @@ const Layout = ({ loginUser, logout, children }) => (
           <li>
             <Link to="/department">組織管理</Link>
           </li>
+          <li>
+            <Link to="/file">ファイル管理</Link>
+          </li>
         </ul>
       </SideMenu>
       <Contents>{children}</Contents>

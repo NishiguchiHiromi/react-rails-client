@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import api from '../service/api';
+import useInitialFetch from 'hooks/useInitialFetch';
 
 const DEFAULT_DEPARTMENTS = [
   { id: uuidv4(), name: '代表取締役', depth: 0 },
@@ -11,22 +11,12 @@ const DEFAULT_DEPARTMENTS = [
 ];
 
 const useDepartmentsFetch = () => {
+  const data = useInitialFetch('departments/tree');
   const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
-    const getDepartments = () => {
-      console.log('fetchDepartments');
-      api
-        .getDepartments()
-        .then((res) => {
-          const depts = res.data;
-          setDepartments(depts.length > 0 ? depts : DEFAULT_DEPARTMENTS);
-        })
-        .catch((res) => console.log(res));
-    };
-
-    getDepartments();
-  }, []);
+    setDepartments(data && data.length > 0 ? data : DEFAULT_DEPARTMENTS);
+  }, [data]);
   return [departments, setDepartments];
 };
 export default useDepartmentsFetch;
